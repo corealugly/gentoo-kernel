@@ -10,6 +10,7 @@
 # Normal rules (sorted alphabetically)
 #
 .*
+!.config
 *.a
 *.asn1.[ch]
 *.bin
@@ -128,7 +129,7 @@ signing_key.x509
 x509.genkey
 
 # Kconfig presets
-all.config
+#all.config
 
 # Kdevelop4
 *.kdev4
