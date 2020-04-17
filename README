@@ -1,0 +1,27 @@
+BUILD KERNEL
+============
+
+#NOTE --> before execute  commands bottom need mount "/boot" and "/boot/efi" partitions   
+#---
+1. cryptsetup open /dev/sda2 encrypted_boot
+2. mount /dev/mapper/encrypted_boot /boot/
+3. mount /dev/sda1  /boot/efi/
+#---
+
+##kernel amd initramfs create
+make -j9 && make -j9 modules_install && make install
+
+genkernel --lvm --luks initramfs
+
+#update grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+#when you will be get stable kernel you need make stable copy, for recovery boot
+#example -->
+
+-rw-r--r-- 1 root root 4512223 Aug  2 23:14 System.map-4.12.12-gentoo-stable
+-rw-r--r-- 1 root root  113967 Aug  2 23:14 config-4.12.12-gentoo-stable
+-rw-r--r-- 1 root root 2870716 Aug  2 23:14 initramfs-genkernel-x86_64-4.12.12-gentoo-stable
+-rw-r--r-- 1 root root 9990096 Aug  2 23:14 vmlinuz-4.12.12-gentoo-stable
+
+and fix grub.conf with your hands
