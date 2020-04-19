@@ -114,57 +114,73 @@ chmod -v 400 *.key
 ```
 
 ##### Backup old key
+```
 efi-readvar -v PK -o old_PK.esl
 efi-readvar -v KEK -o old_KEK.esl
 efi-readvar -v db -o old_db.esl
 efi-readvar -v dbx -o old_dbx.esl
+```
 
 ##### Convert open part of the keys to the ESL format understood for UEFI
+```
 cert-to-efi-sig-list -g "$(uuidgen)" PK.cert.pem PK.esl
 cert-to-efi-sig-list -g "$(uuidgen)" KEK.cert.pem KEK.esl
 cert-to-efi-sig-list -g "$(uuidgen)" db.cert.pem db.esl
+```
 
 ##### Sign ESL files
+```
 sign-efi-sig-list -k PK.key -c PK.cert.pem PK PK.esl PK.auth
 sign-efi-sig-list -a -k PK.key -c PK.cert.pem KEK KEK.esl KEK.auth
 sign-efi-sig-list -a -k KEK.key -c KEK.cert.pem db db.esl db.auth
 
 sign-efi-sig-list -k KEK.key -c KEK.cert dbx old_dbx.esl old_dbx.auth
+```
 
 ##### Clear ALL UEFI key
 - need to enter the uefi and "Delete All Keys" 
 - check: ```efi-readvar```
 
 ##### Create DER versions of each of our three new public keys
+```
 openssl x509 -outform DER -in PK.cert.pem -out PK.cert.der
 openssl x509 -outform DER -in KEK.cert.pem -out KEK.cert.der
 openssl x509 -outform DER -in db.cert.pem -out db.cert.der
+```
 
----
 #### This block only for save windows certificate
 ##### Create compound (i.e., old+new) esl files for the KEK and db, and also create .auth counterparts for these.
-
+```
 cat old_KEK.esl KEK.esl > compound_KEK.esl
 cat old_db.esl db.esl > compound_db.esl
 sign-efi-sig-list -k PK.key -c PK.cert.pem KEK compound_KEK.esl compound_KEK.auth
 sign-efi-sig-list -k KEK.key -c KEK.cert.pem db compound_db.esl compound_db.auth 
+```
 
 ##### Install new key in keystore
+```
 efi-updatevar -e -f old_dbx.esl dbx
 efi-updatevar -e -f compound_db.esl db
 efi-updatevar -e -f compound_KEK.esl KEK
-----
+
 efi-updatevar -f PK.auth PK
+```
 
 ##### Export/backup certificate 
-> if all norm, get all components
+> if all norm, backup all components
+```
 efi-readvar -v PK -o new_PK.esl
 efi-readvar -v KEK -o new_KEK.esl
 efi-readvar -v db -o new_db.esl
 efi-readvar -v dbx -o new_dbx.esl
+```
 
 ##### Sign grubx64.efi
+```
 sbsign --key /etc/efikeys/db.key  --cert  /etc/efikeys/db.crt  --output  /boot/efi/EFI/corebook/grubx64.efi.signed /boot/efi/EFI/corebook/grubx64.efi
+```
 
 ##### Add boot row in UEFI
+```
 efibootmgr -c -L 'gcore.signed' -l '\EFI\corebook\grubx64.efi.signed'
+```
