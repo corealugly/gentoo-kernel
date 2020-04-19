@@ -86,7 +86,9 @@ cp -v vmlinuz-4.12.12-gentoo    vmlinuz-4.12.12-gentoo-stable
 and fix grub.conf with your hands
 
 #### SECURE_BOOT
+```
 emerge -av app-crypt/efitools
+```
 
 The UEFI specification defines four secure, non-volatile variables, which are used to control the secure boot subsystem. They are:
 
@@ -96,14 +98,20 @@ The UEFI specification defines four secure, non-volatile variables, which are us
 4. The **Forbidden Signatures Database (dbx)**. This variable holds a signature database of similar format to db. It functions essentially as a boot executable blacklist.
 
 ##### Preparation
+```
 mkdir /etc/efikeys
 cd /etc/efikeys
+```
 
 ##### Generate self sign certs with keys for Secure Boot: PK, KEK, db
+```
 openssl req -new -x509 -newkey rsa:2048 -subj "/CN=corealugly's platform key/" -keyout PK.key -out PK.cert.pem -days 3650 -nodes -sha256
 openssl req -new -x509 -newkey rsa:2048 -subj "/CN=corealugly's key-exchange-key/" -keyout KEK.key -out KEK.cert.pem -days 3650 -nodes -sha256
 openssl req -new -x509 -newkey rsa:2048 -subj "/CN=corealugly's kernel-signing key/" -keyout db.key -out db.cert.pem -days 3650 -nodes -sha256
+```
+```
 chmod -v 400 *.key
+```
 
 ##### Backup old key
 efi-readvar -v PK -o old_PK.esl
@@ -135,6 +143,7 @@ openssl x509 -outform DER -in db.cert.pem -out db.cert.der
 ---
 #### This block only for save windows certificate
 ##### Create compound (i.e., old+new) esl files for the KEK and db, and also create .auth counterparts for these.
+
 cat old_KEK.esl KEK.esl > compound_KEK.esl
 cat old_db.esl db.esl > compound_db.esl
 sign-efi-sig-list -k PK.key -c PK.cert.pem KEK compound_KEK.esl compound_KEK.auth
