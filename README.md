@@ -90,14 +90,14 @@ The UEFI specification defines four secure, non-volatile variables, which are us
 3. The (caps 'S', caps 'D') **Signature Database (db)**. As the name suggests, this variable holds a UEFI signature database which may contain (any mixture of) public keys, signatures and plain hashes. In practice, X.509 / RSA-2048 public keys are most common. It functions essentially as a boot executable whitelist (described in more detail shortly).
 4. The **Forbidden Signatures Database (dbx)**. This variable holds a signature database of similar format to db. It functions essentially as a boot executable blacklist.
 
-Platform Key (PK) — публичный ключ владельца платформы. Подписи соответствующим приватным ключом необходимы для смены PK или изменения KEK, db и dbx (описаны далее). Хранилище PK должно быть защищено от вмешательства и удаления.
-Key Exchange Key (KEK) — публичные ключи операционных систем. Подписи соответствующими приватными ключами необходимы для изменения баз данных подписей (db, dbx, описаны далее). Хранилище KEK должно быть защищено от вмешательства.
-Базы данных подписей (db, dbx) — Базы данных подписей и хешей доверенных приложений (db) и недоверенных приложений (dbx).
+Platform Key (PK) — публичный ключ владельца платформы. Подписи соответствующим приватным ключом необходимы для смены PK или изменения KEK, db и dbx (описаны далее). Хранилище PK должно быть защищено от вмешательства и удаления.  
+Key Exchange Key (KEK) — публичные ключи операционных систем. Подписи соответствующими приватными ключами необходимы для изменения баз данных подписей (db, dbx, описаны далее). Хранилище KEK должно быть защищено от вмешательства.  
+Базы данных подписей (db, dbx) — Базы данных подписей и хешей доверенных приложений (db) и недоверенных приложений (dbx).  
 
-File format
-.pem - ASCII файл с закодированными данными по схеме Base64 между двумя тегами  "----- BEGIN CERTIFICATE -----"  и  "----- END CERTIFICATE -----"
-.der - это бинарный тип сертификата
-.esl - формат ключей для uefi
+File format  
+.pem - ASCII файл с закодированными данными по схеме Base64 между двумя тегами  "----- BEGIN CERTIFICATE -----"  и  "----- END CERTIFICATE -----"  
+.der - это бинарный тип сертификата  
+.esl - формат ключей для uefi  
 
 ##### Preparation
 ```
