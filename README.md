@@ -36,17 +36,10 @@ proc             /proc              proc     rw,nosuid,nodev,noexec,relatime    
 
 #### BUILD KERNEL
 
-##### Mount boot/efi 
-1. decrypted boot 
+##### Mount/decrypt boot/efi 
 ```
 cryptsetup open /dev/sda2 encrypted_boot
-```
-2. mount boot 
-```
 mount /dev/mapper/encrypted_boot /boot/
-```
-3. mount efi
-```
 mount /dev/sda1  /boot/efi/
 ```
 
