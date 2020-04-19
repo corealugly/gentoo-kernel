@@ -1,6 +1,6 @@
 #### SYSTEM DESIGN
 
-##### Disk partitioning  <<GPT>>
+##### Disk partitioning  "GPT"
 ```
 NAME                MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
 sda                   8:0    0 465.8G  0 disk
